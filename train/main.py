@@ -148,7 +148,6 @@ def train(args, model, enc=False):
     dataset_train = cityscapes(args.datadir, co_transform, 'train')
     dataset_val = cityscapes(args.datadir, co_transform_val, 'val')
 
-    loader = DataLoader(dataset_train, num_workers=args.num_workers, batch_size=args.batch_size, shuffle=True)
     loader_val = DataLoader(dataset_val, num_workers=args.num_workers, batch_size=args.batch_size, shuffle=False)
 
     if args.cuda:
@@ -217,7 +216,7 @@ def train(args, model, enc=False):
 
     for epoch in range(start_epoch, args.num_epochs+1):
         print("----- TRAINING - EPOCH", epoch, "-----")
-
+	loader = DataLoader(dataset_train, num_workers=args.num_workers, batch_size=args.batch_size, shuffle=True) # Do data augmentation every epoch
         scheduler.step(epoch)    ## scheduler 2
 
         epoch_loss = []
@@ -358,7 +357,7 @@ def train(args, model, enc=False):
 
         # remember best valIoU and save checkpoint
         if iouVal == 0:
-            current_acc = average_epoch_loss_val
+            current_acc = -average_epoch_loss_val # When iouVal=False, save the model which average_epoch_loss_val is smaller
         else:
             current_acc = iouVal 
         is_best = current_acc > best_acc
