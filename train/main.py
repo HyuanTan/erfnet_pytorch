@@ -86,10 +86,10 @@ class MyCoTransform(object):
 
         return input, target
 
-best_acc = 0
 
 def train(args, model, enc=False):
-    global best_acc
+    #global best_acc
+    best_acc = 0 ## If best_acc is a global value, it is possible to failed to save the best model when decode after encode and if the best acc in decode is smaller than encode.
 
     #TODO: calculate weights by processing dataset histogram (now its being set by hand from the torch values)
     #create a loder to run all images and calculate histogram of labels, then create weight array using class balancing
